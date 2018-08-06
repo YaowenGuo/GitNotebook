@@ -30,6 +30,35 @@ Git Version 2.x:
 ![git add](./images/add.jpg)
 
 
+> git add -i 可以进入交互的界面
+
+进入交互界面后，首先显示的是工作区状态。
+
+```
+
+$ git add -i
+          staged     unstaged path
+ 1:    unchanged        +0/-0 directory/test.txt
+
+*** Commands ***
+ 1: status	  2: update	  3: revert	  4: add untracked
+ 5: patch	  6: diff	  7: quit	  8: help
+What now>
+```
+
+交互式界面出来后，可以使用数字或者加亮显示的命令首字母，选择相应的功能。
+
+想要添加未追踪的文件(即新创建，未 add 的文件)，可以选择 4，就进入了添加界面，提示也从“What now” 变为 “Add untracked”
+```
+What now> 4
+  1: .gitignore
+  2: direcotry/test.txt
+Add untracked>>
+```
+已经添加的文件前面会显示为 * 号。
+
+如果按回车键，则会结束添加，回到主界面。
+
 ## 提交（commit）
 
 ```
@@ -61,7 +90,9 @@ git commit --allow-empty -m "Empty commit."
 git config --amend --allow-empty --reset-author
 ```
 
-为什么提交一次需要两条指令？这么设计的目录是什么？
+
+
+> 为什么提交一次需要两条指令？这么设计的目录是什么？
 
 ### 工作区、暂存区、版本库
 
@@ -136,6 +167,29 @@ c8e26258bb038e98062ae05ecf0461e2ae45620a
 $ git write-tree | xargs git ls-tree -l -r -t
 ```
 
+### 提交修改
+
+人们经常会做过一件事反悔，提交代码也是一样。或者出现失误，想要弥补失误。想要修改单步提交内容如此常见，git 更是提供了修补的功能。
+
+git commit 使用 `--amend` 时，并不会产生新的提交，而是会对最新的提交做一次修改。
+
+#### 修改版本注释
+
+```
+git commit --amend -m <some_commit>
+```
+
+#### 补充提交内容
+
+git 的补充提交能做的可不止修改注释，它可以修改文件。
+
+例如不想删除已提交的内容。只需要找回之前的文件，补充提交即可。例如找回删除的文件
+```
+git checkout HEAD^ -- src/hello.h
+git commit --amend -m "..."
+```
+
+
 
 ## 状态（status）
 
@@ -172,16 +226,21 @@ M 在第二个字符，表示工作区有待add的修改。
 
 
 
-## 修改内容（diff）
+## 差异比较（diff）
 
 通过使用不同的参数，可以对工作区、缓存区、HEAD 指向的内容两两比较。
 ![git diff](./images/git-diff.jpeg)
 
-### 可以查看仓库中的文件和上一个版本之间的差别
+- 比较工作区和缓存区： git diff
+- 比较工作区和HEAD：git diff HEAD
+- 比较暂存区和HEAD：git diff --cached
+- 比较工作区和历史版本：git diff <version_id/tag>
+- 比较缓存区和历史版本：git diff --cached <version_id/tag>
+- 历史上的两版本相比较：git diff <version_id_1/tag1> <version_id_1/tag2>
 
-git diff
+### 工作区、缓存区和 HEAD 之间的差别
 
-如果 add 文件之后，执行该指令，发现没有任何输出，想要比较 add 之后的文件和上一版本的差别。需要天机 `DEAD` 参数。
+git diff 比较的是工作区和缓存区之间的差别。适合于最新修改，还没有 add 的内容。
 
 ```
 $ git diff #比较工作树与暂存区文件的差异，可以看到只有Second被标为添加，First则没有标注
@@ -196,6 +255,25 @@ index 609d14d..4bde29e 100644
 +Second
 [bool@bool-pc demo]$ ls
 a  a.txt  welcome.txt
+```
+
+如果 add 文件之后，执行该指令，发现没有任何输出，想要比较 add 之后的文件和上一版本的差别。需要添加 `DEAD` 参数。 这是在比较工作区和 HEAD 的差别，因为 add 后的内容并没有提交到 HEAD 中。
+
+### 工作区和 HEAD 之间的差别
+
+git diff HEAD
+
+```
+$ git diff HEAD #HEAD为当前版本库的头指针, 比较工作树和最新提交的差异。可看到First,Secone都被标位增加的。他们都为提交
+diff --git a/welcome.txt b/welcome.txt
+index d1bcf5b..4bde29e 100644
+--- a/welcome.txt
++++ b/welcome.txt
+@@ -1,2 +1,4 @@
+ hello!
+ Author:bool
++First
++Second
 ```
 
 ### 比较缓存区（ADD之后）和上一版本之间的差别
@@ -216,22 +294,22 @@ index d1bcf5b..609d14d 100644
 +First
 ```
 
-### 工作区和上一个版本之间的差别(比较缓存区和上一版本)
+### 工作区和历史上任意版本
 
-git diff HEAD
+git diff <commit-id>
 
-```
-$ git diff HEAD #HEAD为当前版本库的头指针, 比较工作树和最新提交的差异。可看到First,Secone都被标位增加的。他们都为提交
-diff --git a/welcome.txt b/welcome.txt
-index d1bcf5b..4bde29e 100644
---- a/welcome.txt
-+++ b/welcome.txt
-@@ -1,2 +1,4 @@
- hello!
- Author:bool
-+First
-+Second
-```
+### 比较两个历史版本之间的差异
+git diff SHA1 SHA2
+
+> 还可以使用 tag 做比较，例如比较里程碑 A 和 里程碑 B
+
+git diff A B
+
+> 比较上次提交commit和上上次提交
+
+git diff HEAD^ HEAD
+
+^ 表示父提交，HEAD^^ 表示 HEAD^ 的父提交。以此类推。
 
 
 ### 直接将两个分支上最新的提交做diff
@@ -246,6 +324,33 @@ Changes that occurred on the master branch since when the topic
  branch was started off it
 ```
 
+### 比较具体文件
+
+以上各种比较方法都可以添加文件选项，这样只比较具体文件。而不是整个版本。
+```
+$ git diff <...> -- <paths>
+```
+paths 可以是文件，也可以是文件夹。如果是文件夹，则是比较改路径下所有文件的差异。
+
+### 非git 仓库的目录/文件比较
+
+字命令 diff 还可以在 Git 版本库之外执行，对非 Git 目录进行比较，就像 GNU 的 diff 命令一样。之所以提供这个功能是因为 git 差异比较命令更为强大，提供了对二进制文件差异等的扩展支持。
+```
+$ git diff <path1> <path2>
+```
+### 扩展的差异语法
+
+Git 扩展了 GNU 的差异语法，提供了对重命名、二进制文件、文件权限变更的支持。
+
+### 逐词比较
+
+git 默认的比较值逐行比较，想要显示精细的比较，可以使用 --word-diff 参数来进行逐行的比较。
+
+```
+$ git diff --word-diff
+```
+
+
 ### 其他参数
 
 - 查看简单的diff结果，可以加上--stat参数
@@ -257,40 +362,7 @@ git diff --stat
     git diff HEAD -- ./lib
 显示当前目录下的lib目录和上次提交之间的差别（更准确的说是在当前分支下）
 
-### 比较上次提交commit和上上次提交
 
-git diff HEAD^ HEAD
-
-^ 表示父提交，HEAD^^ 表示 HEAD^ 的父提交。以此类推。
-
-### 比较两个历史版本之间的差异
-git diff SHA1 SHA2
-
-
-## 查看提交(log)
-
-用于查看过去所有的提交记录，包括什么人在什么时候进行了提交或合并，以及操作前后有怎样的差别。
-
-git log --stat
-
---stat 参数查看每次提交的文件变更统计信息。
-
---amend 是对刚刚提交的提交进行修补，这样就可以改正前面的提交中错误的用户名和邮件地址，而不用产生另外的新提交。
---allow-empty 使得空提交被允许，之所以这里需要使用，是因为修补的是一个空白提交。
---reset-author 将 Author 的 ID 同步修改，否则只会影响提交者的 ID，使用此参数也会重置 AuthorDate 信息。
-
-
-如果只想显示提交信息的一行描述。可以使用
-git log --pretty=short
-
-只显示指定目录文件的日志
-git log --pretty=oneline #用一行显示日志输出
-
-1.6.3 开始可以使用 --oneline 显示更加精简的输出。
-
-显示文件的改动
-git log <文件或目录名>
-git log -p <文件名>
 
 
 ## 问题
