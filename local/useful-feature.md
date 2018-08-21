@@ -34,7 +34,7 @@
 比如当我们要在一个项目中使用一个分支进行项目文档的管理时，或者当我们想要发布一个软件的开源版本但又不希望将软件的版本历史暴露给外界时，都可以使用以下的方法建立一个独立分支。
 通过带orphan参数的checkout命令建立独立分支
 
-通过带有–orphan参数的checkout命令即可从start_point或者HEAD创建一个独立分支
+通过带有–-orphan参数的checkout命令即可从start_point或者HEAD创建一个独立分支
 ```
 $cd repo
 $git checkout --orphan 新分支名 <start_point>
@@ -83,8 +83,8 @@ $ git bisect bad
 $ git bisect good <branch_id/tag>
 ```
 标记指定版本可以使用版本 id 或 tag。
-
-3. 自动定位到中间版本。
+当“好版本”和“坏版本”标记好之后，git bisect 自动将版本切回到中间版本。
+3. 可以使用查看确定中间版本。
 ```
 $ git describe
 ```

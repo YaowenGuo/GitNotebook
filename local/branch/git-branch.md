@@ -143,7 +143,9 @@ git branch
 前面带 `*` 号的表名当前所在的分支，由于还没有创建新的分支，默认只会有一个 master 分支，这个分支也叫主分支，这是在版本初始化的时候 git 默认创建的，并且提交的版本都默认存在这个分支中。
 
 添加 -a 参数，可以列出所有分支。
+-r 显示远程分支
 -v 同时输出分支头提交的 ID 和 提交说明。
+
 
 ### 创建分支
 
@@ -156,6 +158,10 @@ git branch <new-branch-name>
 git checkout <branch-name>
 ```
 
+//创建并切换到新分支  
+```
+git checkout -b branchname  
+```
 ### merge 合并分支
 
 在日志中，可以看到我们历史操作记录commit、checkout、reset、merge。只要不进行git的GC（Garbage Collection）就可以通过日志随意调取近期的历史状态。
@@ -189,6 +195,20 @@ git commit --amend——修改提交信息
 ```
 
 此时就完成了一次合并。
+
+### 删除分支
+
+git branch -D <branch name>
+
+删除远程的分支
+
+git branch -r -d origin/hongchangfirst
+
+git push origin --delete <branchName>
+#注意这个只是删除本地的索引，而不是真正删除远程分支的内容，要想真正删除远程分支上的内容，可以这样：
+
+git push origin :hongchangfirst
+注意，冒号前面的空格不能少，相当于把一个空分支push到server上，等于删除该分支。
 
 ## 完全独立的分支
 

@@ -175,8 +175,250 @@ git 就像一台时光机，更改历史提交后，即使后继提交的内容�
 
 拣选指令（git cherry-pick）实现提交在新的分支上的“重放”。是从众多的提交中挑选一个提交应用在当前的分支中。该指令需要提供一个提交 ID 作为参数，提交过程相当于将该提交导出为补丁文件，然后在当前 HEAD 上重放，形成无论内容还是提交说明都一致的提交。
 
+#### 丢弃
+> 需求
 
+假设有从先到后的一系列提交 A、B、C、D、E、F。为了便于识别，我们通过打 `tag` 标识。
+```
+$ git tag F
+$ git tag E HEAD^
+$ git tag D HEAD^^
+$ git tag C HEAD^^^
+$ git tag B HEAD^4
+$ git tag B HEAD~4
+$ git tag A HEAD~5
+```
+
+![git commit history](./images/git-commit-history.png)
+
+
+其中 D 是一次无用的提交，想要将其从历史中移除。即将 E 直接嫁接得到提交 C 上。
+
+![git cherry-pick](./images/git-cherry-pick.png)
+
+> 拣选过程
+
+1. 首先要将 D 之前的版本检出
+
+```
+$ git checkout C
+```
+检出之后会处于分离头指针的状态。
+
+2. 重放 D 之后的所有提交
+执行拣选操作将 E 提交在当前 HEAD 上重放
+```
+$ git cherry-pick master^
+```
+执行拣选操作将 E 提交在当前 HEAD 上重放
+```
+$ git cherry-pick master^
+```
+
+**拣选操作只能将提交重放到新的临时分支上，定位到原节点上的 tag 并不会被放置。因为重放之后的 SHA1 哈希值已经变了。**
+
+通过日志还可以看出，最新两次提交的 `AuthorDate` 和 `CommitDate` 不同。 `AuthorDate` 是版本的创建日期 `CommitDate` 是拣选操作时间，说明是一次重新的提交。
+
+3. 将 master 分支重置到新的提交 ID 上。
+
+```
+$ git checkout master
+$ git reset --hard HEAD@{1}
+```
+HEAD@{1} 使用了 reflog 的语法，是指 master 分支之前的 HEAD 指向的节点。
+
+
+#### 丢弃
+> 恢复原有历史
+
+拣选只是新建立了一个分支，原有的分支和 tag 都在，想要恢复回之前的分支，只需要重置会之前的头结点即可。
+
+```
+$ git reset --hard F
+```
+这里使用了 tag F，实际上使用哈希值和其他能唯一确定提交节点的值都是可以的。
+
+
+将 D 和 C 合并为一个提交，E 和 F 重新嫁接到 “CD” 复合提交上。
+
+![git cherry-pick](./images/git-cherry-pick1.png)
+
+1. 要将 C 和 D 合并，需要先回到 D
+
+```
+$ git checkout D
+```
+
+2. 恢复 C 和 D 需要提交的代码
+```
+$ git reset --soft HEAD^^
+```
+
+3. 执行提交，提交说明重用 C 的提交说明
+```
+$ git commit -C C
+```
+
+4. 将 E 和 F 重放到当前临时分支上
+```
+$ git cherry-pick E
+$ git cherry-pick F
+```
+
+5. 将 master 分支指向新的提交 ID
+```
+$ git checkout master
+$ git reset --hard HEAD@{1}
+```
 
 ### 变基操作
 
+#### 删除节点
+
+重置回顺序的节点，用户测试。
+```
+$ git checkout master
+$ git reset --hard F
+```
+
+`git rebase` 是对提交执行变基操作，即可以实现将制定范围的提交“嫁”接到另一个提交之上。
+
+```
+$ git rebase        <newbase>         [<till>]
+$ git rebase --onto <newbase> <since> [<till>]
+$ git rebase -i ...
+```
+
+很显然为了执行将 E 和 F 提交跳过提交 D，“嫁接”到提交 C 上。可以如此执行变基命令：
+
+```
+
+$ git rebase --onto C E^ F
+```
+因为 E^等价于 D，并且 F 和当前 HEAD 的指向相同，因此可以这样操作：
+```
+$ git rebase --onto C D
+```
+
+重置头节点，将 master指向变基后的链
+
+```
+$ git checkout master
+$ git reset --hard HEAD@{1}
+```
+
+**因为之后 <till> 不是一个分支时，才会先执行一次 checkout，因为上面的操作可以使用一个指令就能完成，只需要改变一下 <till> 的节点表示方式**
+```
+$ git rebase --onto C E^ master
+```
+
+#### 合并节点
+
+通用先重置历史顺序。
+```
+$ git reset --hard F
+```
+
+将 C 和 D 合并
+
+```
+$ git checkout D
+$ git reset --soft HEAD^^
+$ git commit -C C
+// 记住这提交 ID， 或者打个 tag
+$ git tag newbase
+$ git rev-parse newbase
+
+// 执行变基操作
+$ git rebase --onto newbase E^ master
+```
+
+恢复一下，方便后继操作
+
+```
+$ git reset --hard F
+```
+
+
 ### 交互式变基操作
+
+```
+$ git reset --hard F
+```
+
+#### 丢弃 D
+
+```
+$ git rebase -i D^
+
+pick cc3d5c5 D
+pick dd2b2c1 E
+pick 7440e4b F
+
+# Rebase 8025881..7440e4b onto 8025881 (3 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+删除 D 所在的行
+
+```
+pick dd2b2c1 E
+pick 7440e4b F
+```
+保存退出，变基即可开始，如果出现了冲突，解决冲突，然后将改动的文件加入跟踪。执行
+```
+git rebase --continue
+```
+成功显示
+Successfully rebased and updated refs/heads/master.
+
+#### 融合提交 C，D
+重置场景
+```
+$ git checkout master
+$ git reset --hard F
+```
+因为要将 C 和 D 融合，C也需要加入到提交
+```
+$ git rebase -i C^
+```
+
+将 D 的 pick 动作改为 squash
+```
+pick 8025881 C
+squash cc3d5c5 D
+pick dd2b2c1 E
+pick 7440e4b F
+```
+保存退出，自动开始变基操作。在执行到 squash 命令设定的提交时，进入提交前的日志编辑状态。很明显 C 和 D 的提交说明显示在一起了。
+
+此时可以编辑要合并的提交的日志。然后保存后会继续执行后继的提交。
+```
+$ git log --oneline --decorate -6
+```
+可以看到融合 C 和 D 的提交日志实际上是两者日志的融合。在前面当行现实的日志看不出来。
+```
+$ git cat-file -p HEAD^^
+tree 0e8f4b20a787a9f7c9bf7a4881d6c5164e1dc1a2
+parent ed7b545ba8e2900a80edc266db345301acaff4b5
+author Yaowen <you@example.com> 1533607194 +0800
+committer Yaowen <you@example.com> 1534820829 +0800
+
+C & D
+```
