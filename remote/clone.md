@@ -5,36 +5,70 @@
 要参与任何一个 Git 项目的协作,必须要了解该如何管理远程仓库.远程仓库是指托管在网络上的项目仓库,可能会有好多个,其中有些你只能读,另外有些可以写.同他人协作开发某 个项目时,需要管理这些远程仓库,以便推送或拉取数据,分享各自的工作进展.管理远程仓库的工作,包括添加远程库,移除废弃的远程库,管理各式远程库分 支,定义是否跟踪这些分支,等等.本节我们将详细讨论远程库的管理和使用.
 
 远程操作的第一步，通常是从远程主机克隆一个版本库，这时就要用到git clone命令。
+```
+$ git clone <repository> [<directory>]
+$ git clone --bare <repository> <directory.git>
+$ git clone --mirror <repository> <directory.git>
+```
+- 用法一将 <repository> 指向的版本创建一个克隆到 <directory> 目录。目录 <directory> 相当于克隆版本库的工作区，文件都会检出，版本库位于工作区下的 .git 目录。
 
-      $ git clone <版本库的网址>
+- 口用法 2 和用法 3 创建的克隆版本库都不包含工作区，直接就是版本库的内容，这样的版本库称为裸版本库。一般约定俗成裸版本库的目录名以 .git 为后缀，所以上面示例中将克隆出来的裸版本库目录名写作 <directory.git>.
+
+- 用法 3 区别于用法 2 之处在于用法 3 克隆出来的裸版本对上游版本库进行了注册，这样可以在裸版本库中使用 git fetch 命令和上游版本库进行持续同步。
+- 用法 3 只在 1.6.0 或更新版本的 Git 中才提供。
+
+Git 的 PUSH 和 PULL 命令的用法相似，使用下面的语法：
+
+git push  [<remote- repos>  [<refspec>]]
+
+git pull  [<remote - repos>  [<refspec>]]
+
+其中方括号的含义是参数可以省略，<remote-repos> 是远程版本库的地址或名称，<refspec> 是引用表达式，暂时理解为引用即可。后面的章节再具体介绍 PUSH 和 PULL 命令的细节。
+
+下面就通过不同的 Git 命令组合，掌握版本库克隆和镜像的技巧。
 
 比如，克隆jQuery的版本库。
-
-      $ git clone https://github.com/jquery/jquery.git
+```
+$ git clone https://github.com/jquery/jquery.git
+```
 
 该命令会在本地主机生成一个目录，与远程主机的版本库同名。Git会把"Git URL"里最后一级目录名的'.git'的后辍去掉,做为新克隆(clone)项目的目录名: (例如. git clone http://git.kernel.org/linux/kernel/git/torvalds/linux-2.6.git 会建立一个目录叫'linux-2.6')如果要指定不同的目录名，可以将目录名作为git clone命令的第二个参数。
+```
+$ git clone <版本库的网址> <本地目录名>
+```
 
-       $ git clone <版本库的网址> <本地目录名>
 git clone支持多种协议，除了HTTP(s)以外，还支持SSH、Git、本地文件协议等，下面是一些例子。
+```
+$ git clone http[s]://example.com/path/to/repo.git/
+$ git clone ssh://example.com/path/to/repo.git/
+$ git clone git://example.com/path/to/repo.git/
+$ git clone /opt/git/project.git
+$ git clone file:///opt/git/project.git
+$ git clone ftp[s]://example.com/path/to/repo.git/
+$ git clone rsync://example.com/path/to/repo.git/
+```
 
-
-       $ git clone http[s]://example.com/path/to/repo.git/
-       $ git clone ssh://example.com/path/to/repo.git/
-       $ git clone git://example.com/path/to/repo.git/
-       $ git clone /opt/git/project.git
-       $ git clone file:///opt/git/project.git
-       $ git clone ftp[s]://example.com/path/to/repo.git/
-       $ git clone rsync://example.com/path/to/repo.git/
 SSH协议还有另一种写法。如果访问一个Git URL需要用法名和密码，可以在Git URL前加上用户名，并在它们之间加上@符合以表示分割.git会提示你输入密码。
-
-       $ git clone [user@]example.com:path/to/repo.git/
-       git clone robin.hu@http://www.kernel.org/pub/scm/git/git.git
+```
+$ git clone [user@]example.com:path/to/repo.git/
+git clone robin.hu@http://www.kernel.org/pub/scm/git/git.git
+```
 通常来说，Git协议下载速度最快，SSH协议用于需要用户认证的场合。但是有时必须使用http协议,比如你公司的防火墙阻止了你的非http访问请求.各种协议优劣的详细讨论请参考官方文档
 
 
 另外，我们可以通过-b <name>来指定要克隆的分支名，比如
-       $ git clone -b master2 ../server .
+```
+$ git clone -b master2 ../server .
+```
 表示克隆名为master2的这个分支，如果省略-b <name>表示克隆master分支。
+
+
+## 对等工作区
+
+不使用--bare 或--mirror 创建出来的克隆包含工作区，这样就会产生两个包含工作区的版本库。这两个版本库是对等的，如
+
+
+
 
 
 
