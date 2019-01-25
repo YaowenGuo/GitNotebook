@@ -99,7 +99,7 @@ $ git rebase --onto F       B^      C
 D---E---F---B'--C' article
 ```
 
-**提交试用了原有的内容和提交信息，但却不再是原有的提交了**
+**提交使用了原有的内容和提交信息，但却不再是原有的提交了**
 
 
 Here is how you would transplant a topic branch based on one branch to another, to pretend that you forked the topic branch from the latter branch, using rebase --onto.

@@ -56,6 +56,10 @@ $ git rev-parse refs/tags/<tag_name>
 
 git tag -d v1.0
 
+$ git push origin --delete <branchName>
+删除tag这么用：
+$ git push origin --delete tag <tagname>
+
 ## 验证tag
 如果你有GPG私钥的话就可以验证tag：
 
