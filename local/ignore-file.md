@@ -56,3 +56,37 @@ git commit -m 'update .gitignore'
 `.gitignore` 文件默认会被添加到版本库中，这样在别人获取代码时，会一起得到 `.gitignore` 文件。 所以称之为“共享式”忽略，与之对应的忽略“独享”式忽略，独享式的忽略就不会因为因为版本共享给他人。只在本地版本库中生效。独享式忽略有两种。
 - 一种是针对具体版本库的忽略，即在版本库 .git 目录下的一个文件 `.git/info/exclude` 来设置文件忽略。
 - 另一种是全局的“独享式”忽略。 即通过 Git 的配置变量 core.excludesfile 指定一个忽略文件，其设置的忽略在其作用域有效。
+
+
+## 忽略已经提交的
+
+忽略已经提交的，需要将文件从跟踪中删除，然后提交一个新的节点。
+
+```
+git rm --cached -r .idea
+git add .
+git commit -m "ignore track file"
+```
+
+又时候，想要改变 ignore 文件的整个内容，这时候由于添加的比较多，不知道添加了哪些文件是已经跟踪了的。 无法一一清楚跟踪的文件。可以使用如下步骤，先全部清楚，然后取消非 ignore 的文件的清除操作
+
+```bash
+git rm -r --cached . # 由于是目录，需要加 -r
+```
+这时候，所有的文件都被 delete 掉了
+
+```
+git status
+```
+不确定从新 commit 会不会把新的文件都给提交成自己的文件，所以不能提交，可以取消不是 ignore 的更改。
+
+```
+git add .
+git checkout .
+```
+
+然后将剩下的被删除的文件提交即可
+
+```
+git commit -m "ignore file"
+```
