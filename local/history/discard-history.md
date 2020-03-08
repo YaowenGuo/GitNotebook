@@ -59,3 +59,27 @@ $ git log --pretty=raw 提交ID
 ```
 $ git rebase --onto <根提交ID> A master
 ```
+
+
+
+	Slug	Description	Product count
+Save shipping classesAdd shipping class
+EUB特货
+Edit | Remove
+eub-special
+1
+E特快
+Edit | Remove
+ems-express
+1
+E邮宝
+Edit | Remove
+ems-normal
+2
+美国专线
+Edit | Remove
+us-special
+
+
+
+Intelligent Voice & Smart Vibrating Sucking Male Masturbator Cup (Intelligent Voice & Smart Vibrating Sucking Male Masturbator Cup)

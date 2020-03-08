@@ -5,6 +5,7 @@
   * [Install](local/install.md)
   * [Create Or Clone](local/create-or-clone.md)
   * [Add and Commit](local/add-and-commit.md)
+  * [Compore file or change(diff)](local/diff.md)
   * [History](local/history.md)
   * [Git Object](local/object.md)
   * [Stash 缓存](local/stash.md)
