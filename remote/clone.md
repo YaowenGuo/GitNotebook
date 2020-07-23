@@ -78,78 +78,28 @@ $ git clone -b master2 ../server .
 
 　　要查看当前配置有哪些远程仓库,可以用 Git remote 命令,它会列出每个远程库的简短名字.在克隆完某个项目后,至少可以看到一个名为 origin 的远程库,Git 默认使用这个名字来标识你所克隆的原始仓库:
 
-　　$ git clone git://github.com/schacon/ticgit.git
+```
+$ git clone git://github.com/schacon/ticgit.git
+```
 
-       $ cd ticgit
 
-（1）git remote 不带参数，列出已经存在的远程分支
-
-　　$ git remote
-
-2）git remote -v | --verbose 列出详细信息，在每一个名字后面列出其远程url,此时， -v 选项(译注:此为 –verbose 的简写,取首字母),显示对应的克隆地址:
-
-　　$ git remote -v
-
-　　origin git://github.com/schacon/ticgit.git如果有多个远程仓库,此命令将全部列出.比如在我的 Grit 项目中,可以看到:
-
-　　$ cd grit
-
-　　$ git remote -v
-
-　　bakkdoor git://github.com/bakkdoor/grit.git
-
-　　cho45 git://github.com/cho45/grit.git
-
-　　defunkt git://github.com/defunkt/grit.git
-
-　　koke git://github.com/koke/grit.git
-
-　　这样一来,我就可以非常轻松地从这些用户的仓库中,拉取他们的提交到本地.请注意, SSH URL 链接的格式为:
-
-origin	git@github.com:guobool/hello-world.git (fetch)
-origin	git@github.com:guobool/hello-world.git (push)
-
-https链接的格式为:
-origin	https://github.com/guobool/hello-world.git (fetch)
-origin	https://github.com/guobool/hello-world.git (push)
-添加远程仓库
-
-　　要添加一个新的远程仓库,可以指定一个简单的名字,以便将来引用,运行 git remote add [shortname] [url]:
-
-　　$ git remote
-
-　　origin
-
-　　$ git remote add pb git://github.com/paulboone/ticgit.git
-
-　　$ git remote -v
-
-　　origin git://github.com/schacon/ticgit.git
-
-　　pb git://github.com/paulboone/ticgit.git现在可以用字串 pb 指代对应的仓库地址了.比如说,要抓取所有 Paul 有的,但本地仓库没有的信息,可以运行 git fetch pb:
-
-　　$ git fetch pb
-
-　　remote: Counting objects: 58, done.
-
-　　remote: Compressing objects: 100% (41/41), done.
-
-　　remote: Total 44 (delta 24), reused 1 (delta 0)
-
-　　Unpacking objects: 100% (44/44), done.
-
-　　From git://github.com/paulboone/ticgit
-
-　　* [new branch] master -> pb/master
-
-　　* [new branch] ticgit -> pb/ticgit
-
-现在,Paul 的主干分支(master)已经完全可以在本地访问了,对应的名字是 pb/master,你可以将它合并到自己的某个分支,或者切换到这个分支,看看有些什么有趣的更
 
 
 ### 查看远程分支
 
+```
 git remote show origin
+
+git remote -v
+```
+
+git remote 不带参数，列出已经存在的远程分支
+
+```
+git remote
+```
+
+git remote -v | --verbose 列出详细信息，在每一个名字后面列出其远程url,此时， -v 选项(译注:此为 –verbose 的简写,取首字母),显示对应的克隆地址:
 
 ## push
 
@@ -178,6 +128,7 @@ git branch --set-upstream master origin/next
 如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。
 
 $ git pull origin
+
 上面命令表示，本地的当前分支自动与对应的origin主机”追踪分支”(remote-tracking branch)进行合并。
 
 如果当前分支只有一个追踪分支，连远程主机名都可以省略。
