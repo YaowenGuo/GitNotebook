@@ -3,3 +3,4 @@
 git remote add——添加远程仓库
 git remote add origin <git@github.com:用户明/仓库明.git>
 添加了仓库地址后，git会自动将上述仓库地址的名称设置为origin（标识符）
+
