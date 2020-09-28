@@ -223,11 +223,12 @@ $ git rebase -i <tag/SHA_id>
 ```
 $ git status -8 -b
 
-##master
+# master
 
 $ git log --oneline --decorate -6
 ```
 
+[修改历史提交的 message](https://docs.github.com/en/free-pro-team@latest/github/committing-changes-to-your-project/changing-a-commit-message)
 
 ### 待归类
 ```

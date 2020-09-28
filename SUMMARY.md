@@ -30,3 +30,4 @@
   * [Synchronous data](remote/synchronous-data.md)
 * Cooperation
   * [remote](cooperation/remote.md)
+  * [submodule](cooperation/submodule.md)

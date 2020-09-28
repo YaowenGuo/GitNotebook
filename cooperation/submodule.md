@@ -11,3 +11,15 @@ git rm <asubmodule>
 git rm --cached <asubmodule>
 rm -rf .git/modules/<asubmodule>
 ```
+
+## 查看各个 submodule 的分支。
+
+```shell
+git submodule foreach 'git status'
+```
+
+You can always make it simpler by assign this to alias:
+
+```shell
+git config --global alias.sb "submodule foreach \"git status\""
+```
