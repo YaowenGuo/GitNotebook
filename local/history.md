@@ -3,7 +3,11 @@
 
 ## 查看提交(log)
 
-用于查看过去所有的提交记录，包括什么人在什么时候进行了提交或合并，以及操作前后有怎样的差别。
+```shell
+git log
+```
+
+也可以直接在指令中添加参数，来直接搜索。输入 `/` 文件名可以在 log 信息里搜索相关提交点。
 
 git log --stat
 
@@ -20,7 +24,17 @@ git log --pretty=short
 只显示指定目录文件的日志
 git log --pretty=oneline #用一行显示日志输出
 
-1.6.3 开始可以使用 --oneline 显示更加精简的输出。
+可以使用 --oneline 显示更加精简的输出。
+```
+# git log --pertty=oneline
+
+683ec75933cfdcde1642376b6197612b2b7b7db0 (origin/master, origin/fen_zu_tao_lun) Update libengine.so for fix no sound.
+53dd30c26636ff32e47a68390b5a9fd7b7c60786 Sync truman engine.
+04483a47d0ab7b6d21f2ca606205fbf3cd5a9c3e Sync truman.
+091f2b4f10a1da29e28569599adb1df5e7e95c62 Add interview mute remote function.
+f806688054954efe414e20736d1f255dfdad6f1a Update libengine.so.
+...
+```
 
 ### 也可以查看范围
 
@@ -42,6 +56,12 @@ $ git log -3 --pretty=oneline
 ### 显示文件的提交历史
 
 git log <文件或目录名>
+
+```
+git log --pertty=oneline src/main/jni/live-engine/prebuilt/libengine.so
+```
+
+用于查看过去所有的提交记录，包括什么人在什么时候进行了提交或合并，以及操作前后有怎样的差别。
 
 ### 显示文件的改动
 
