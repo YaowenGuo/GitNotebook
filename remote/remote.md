@@ -4,3 +4,14 @@ git remote add——添加远程仓库
 git remote add origin <git@github.com:用户明/仓库明.git>
 添加了仓库地址后，git会自动将上述仓库地址的名称设置为origin（标识符）
 
+
+## 修改仓库地址
+
+如果仓库 url 地址被设置为 `http` 想要修改为 `ssh`。或者仓库地址变了，可以修改地址。
+
+``` shell
+git remote set-url origin <地址>
+
+git remote -v # 查看修改结果
+```
+
