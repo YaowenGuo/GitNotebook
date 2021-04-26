@@ -26,3 +26,35 @@ You can always make it simpler by assign this to alias:
 ```shell
 git config --global alias.sb "submodule foreach \"git status\""
 ```
+
+
+## foreach
+
+```
+git submodule foreach 'git checkout -b lottery' && git checkout 
+
+gcl='git clone --recurse-submodules'
+gsi='git submodule init'
+gsu='git submodule'
+
+```
+
+```shell
+geach() {
+    echo "git submodule foreach 'git $*' && git $*"
+    git submodule foreach "git $*" && git $*
+}
+
+geach_c() {
+    geach checkout $*
+}
+
+geach_r() {
+    geach rebase $*
+}
+
+geach_m() {
+    geach merge $*
+}
+```
+
