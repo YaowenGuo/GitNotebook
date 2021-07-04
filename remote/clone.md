@@ -12,7 +12,7 @@ $ git clone --mirror <repository> <directory.git>
 ```
 - 用法一将 <repository> 指向的版本创建一个克隆到 <directory> 目录。目录 <directory> 相当于克隆版本库的工作区，文件都会检出，版本库位于工作区下的 .git 目录。
 
-- 口用法 2 和用法 3 创建的克隆版本库都不包含工作区，直接就是版本库的内容，这样的版本库称为裸版本库。一般约定俗成裸版本库的目录名以 .git 为后缀，所以上面示例中将克隆出来的裸版本库目录名写作 <directory.git>.
+- 用法 2 和用法 3 创建的克隆版本库都不包含工作区，直接就是版本库的内容，这样的版本库称为裸版本库。一般约定俗成裸版本库的目录名以 .git 为后缀，所以上面示例中将克隆出来的裸版本库目录名写作 <directory.git>.
 
 - 用法 3 区别于用法 2 之处在于用法 3 克隆出来的裸版本对上游版本库进行了注册，这样可以在裸版本库中使用 git fetch 命令和上游版本库进行持续同步。
 - 用法 3 只在 1.6.0 或更新版本的 Git 中才提供。
@@ -63,6 +63,15 @@ $ git clone -b master2 ../server .
 表示克隆名为master2的这个分支，如果省略-b <name>表示克隆master分支。
 
 ***--git-dir  用于指定操作的仓库路径，而不是当前所在目录。***
+
+克隆指定分支( -b branch/tag/commit)，指定拉取历史节点数量(--depth)。 
+
+`--single-branch` 指定只拉取指定分支。
+
+```
+git clone --depth 10 --single-branch -b 67510fac36d27b2e22c7cd955fc167136b737b93 https://github.com/llvm/llvm-project/ /Users/albert/project/android/work/webrtc_build/src/third_party/llvm
+```
+
 
 ## 裸版本库
 
@@ -156,3 +165,13 @@ $ git pull
 如果合并需要采用rebase模式，可以使用–rebase选项。
 
 $ git pull --rebase <远程主机名> <远程分支名>:<本地分支名>
+
+
+
+## fetch
+
+可以指定拉取节点数量 `--depth` 和 指定拉取节点/分支/tag
+
+```
+git fetch --depth=1 origin 67510fac36d27b2e22c7cd955fc167136b737b93
+```
