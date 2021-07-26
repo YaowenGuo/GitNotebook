@@ -64,12 +64,12 @@ $ git clone -b master2 ../server .
 
 ***--git-dir  用于指定操作的仓库路径，而不是当前所在目录。***
 
-克隆指定分支( -b branch/tag/commit)，指定拉取历史节点数量(--depth)。 
+克隆指定分支( -b branch/tag/commit)，指定拉取历史节点数量(--depth)。
 
 `--single-branch` 指定只拉取指定分支。
 
 ```
-git clone --depth 10 --single-branch -b 67510fac36d27b2e22c7cd955fc167136b737b93 https://github.com/llvm/llvm-project/ /Users/albert/project/android/work/webrtc_build/src/third_party/llvm
+git clone --depth 10 --single-branch -b 67510fac36d27b2e22c7cd955fc167136b737b93 https://github.com/llvm/llvm-project/ llvm
 ```
 
 
