@@ -1,6 +1,6 @@
 # rebase 变基操作
 
-变基操作使用的不多，然而其功能却很强大。
+变基操作使用的不多，然而其功能却很强大。
 
 ## rebase黄金法则
 
@@ -15,16 +15,16 @@ $ git rebase        <newbase>         [<till>]
 $ git rebase --onto <newbase> <since> [<till>]
 $ git rebase -i ...
 
-$ git rebase --continue # 解决冲突后继续执行变基
+$ git rebase --continue # 解决冲突后继续执行变基
 $ git rebase --skip # 冲突时跳过当前提交继续执行
-$ git rebase --abort # 放弃变基操作，回复变基之前的状态
+$ git rebase --abort # 放弃变基操作，回复变基之前的状态
 ```
 
 ## 合并分支
 ```
 $ git rebase        <newbase>         [<till>]
 ```
-rebase 最常用的操作就是讲提交重新放置在另一个分支上
+rebase 最常用的操作就是讲提交重新放置在另一个分支上
 
 Assume the following history exists and the current branch is "topic":
 ```
@@ -48,7 +48,7 @@ D---E---F---G master
 
 看起来 `rebase` 会把当前分支重新放置到 `mater` 分支之上。也有很多文档指出，可以将其看作是，先执行了 `git checkout master`，然后将新的提交（这里是 A、B、C）放置到新的 topic 分支上。然而我却认为这是一种误导。根据各种表现记忆不同的规则是难的。我想说明实质的问题。
 
-从显示的结果来看这是两个分支，然而所谓的分支只是指向节点的指针。你可以把它看做是这个节点的别名。这时候我们看到的起始是一个树形的提交节点。
+从显示的结果来看这是两个分支，然而所谓的分支只是指向节点的指针。你可以把它看做是这个节点的别名。这时候我们看到的起始是一个树形的提交节点。
 
 ```
       A---B---C
@@ -56,7 +56,7 @@ D---E---F---G master
 D---E---F---G
 ```
 
-rebase 起始是将 `<till>` 之前的所有节点合并到 `<newbase>` 之上。为什么说合并，而不是放置？这是因为 git 在变基时，有检测重复的能力。例如
+rebase 起始是将 `<till>` 之前的所有节点合并到 `<newbase>` 之上。为什么说合并，而不是放置？这是因为 git 在变基时，有检测重复的能力。例如
 
 If the upstream branch already contains a change you have made (e.g., because you mailed a patch which was applied upstream), then that commit will be skipped. For example, running git rebase master on the following history (in which A' and A introduce the same set of changes, but have different committer information):
 ```
@@ -77,7 +77,7 @@ D---E---A'---F master
 $ git rebase --onto <newbase> <since> [<till>]
 ```
 
-`--onto` 给出了 rebase 更明确的指示，他能将指定 `<since>` 到 `<till>` 之间的提交节点 明确放置到 `<newbase>` 之上。
+`--onto` 给出了 rebase 更明确的指示，他能将指定 `<since>` 到 `<till>` 之间的提交节点 明确放置到 `<newbase>` 之上。
 
 ### 重放
 ```
@@ -86,12 +86,12 @@ $ git rebase --onto <newbase> <since> [<till>]
 D---E---F article
 ```
 
-当我们想要将 topic 上的 B，C 放置到 F 之上时，可以执行
+当我们想要将 topic 上的 B，C 放置到 F 之上时，可以执行
 ```
 $ git rebase --onto article topic^^ topic
 $ git rebase --onto F       B^      C
 ```
-**since 到 till 是不包括since 的所有提交节点。**
+**since 到 till 是不包括since 的所有提交节点。**
 
 ```
       A---B---C topic
@@ -99,7 +99,7 @@ $ git rebase --onto F       B^      C
 D---E---F---B'--C' article
 ```
 
-**提交使用了原有的内容和提交信息，但却不再是原有的提交了**
+**提交使用了原有的内容和提交信息，但却不再是原有的提交了**
 
 
 Here is how you would transplant a topic branch based on one branch to another, to pretend that you forked the topic branch from the latter branch, using rebase --onto.
@@ -194,7 +194,7 @@ git rebase --abort
 
 ## 交互式变基
 
-当使用 -i 参数时，会进入交互式交互界面。虽然操作变成了手动，但却充满了灵活的操作。执行交互式变基操作，会将 `<since>` 到 `<till>` 的提交悉数罗列在一个文件中，然后打开一个编辑器来编辑这个文件。可以通过修改文件的内容设定变基操作，实现删除提交、将多个提交压缩为一个提交、更改提交顺序，以及更改历史提交的提交说明等。
+当使用 -i 参数时，会进入交互式交互界面。虽然操作变成了手动，但却充满了灵活的操作。执行交互式变基操作，会将 `<since>` 到 `<till>` 的提交悉数罗列在一个文件中，然后打开一个编辑器来编辑这个文件。可以通过修改文件的内容设定变基操作，实现删除提交、将多个提交压缩为一个提交、更改提交顺序，以及更改历史提交的提交说明等。
 ```
 $ git rebase -i <tag/SHA_id>
 ```

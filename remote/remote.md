@@ -15,3 +15,9 @@ git remote set-url origin <地址>
 git remote -v # 查看修改结果
 ```
 
+## remote/HEAD 丢失
+
+```
+git remote set-head origin master
+```
+或者打开 `.git/refs/remotes/origin/HEAD` 修改。
