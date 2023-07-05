@@ -58,3 +58,14 @@ geach_m() {
 }
 ```
 
+
+## submodule update --remote 
+
+fatal: Unable to find refs/remotes/origin/HEAD revision in submodule path 'business/downloader'
+
+
+```
+git submodule foreach git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/master  
+```
+
+https://stackoverflow.com/questions/17639383/how-to-add-missing-origin-head-in-git-repo

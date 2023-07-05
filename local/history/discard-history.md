@@ -7,18 +7,18 @@
 如果想要把 A 之前的历史提交全部清除。
 
 
-基于 A 对应的提交构建一个跟提交，然后在将 master 分支在里程碑 A 之后的提交变基的新的根提交上，实现对历史提交的清除。
+基于 A 对应的提交构建一个跟提交，然后在将 master 分支在里程碑 A 之后的提交变基的新的根提交上，实现对历史提交的清除。
 
-A对应的提交的构造出一个根提交至少有两种方法，
-## 方法一： git commit-tree
+A对应的提交的构造出一个根提交至少有两种方法，
+## 方法一： git commit-tree
 
 
 1. 查看里程碑 A 指向的目录树
-用 A^{tree} 语法访问里程碑 A 对应的目录树。
+用 A^{tree} 语法访问里程碑 A 对应的目录树。
 ```
 $ git cat-file -p A^{tree}
 ```
-2. 使用 git commit-tree 可以直接从该目录树创建提交
+2. 使用 git commit-tree 可以直接从该目录树创建提交
 
 ```
 $ echo "Commit from tree of tag A." | git commit-tree A^{tree}
@@ -29,7 +29,7 @@ $ echo "Commit from tree of tag A." | git commit-tree A^{tree}
 $ git log --pretty=raw 提交ID
 ```
 
-## 方法二：git hash-object
+## 方法二：git hash-object
 
 1. 查看里程碑 A 指向的提交。用 A^0 语法访问里程碑 A 对应的提交
 
@@ -42,22 +42,20 @@ $ git cat-file commit A^0
 $ git cat-file commit A^0 | sed -e '/^parent/ d' > tmpfile
 ```
 
-3. 执行 git hash-object 命令，将文件 tmp 作为一个commit commit 对象写入对象库。
+3. 执行 git hash-object 命令，将文件 tmp 作为一个commit commit 对象写入对象库。
 ```
-$ git hash-object -t commit -b -- tmpfile
+$ git hash-object -t commit -b -- tmpfile
 ```
-4. 上面的结果就是 至此那个提交的对象 ID. 可以查看以验证该提交确实没有父提交。
+4. 上面的结果就是 至此那个提交的对象 ID. 可以查看以验证该提交确实没有父提交。
 ```
 $ git log --pretty=raw 提交ID
 ```
 
 
-无论哪种方法创建了新的根提交，都可以使用变基操作，将 master 分支在里程碑 A 之后的提交变基到新的根提交上。
+无论哪种方法创建了新的根提交，都可以使用变基操作，将 master 分支在里程碑 A 之后的提交变基到新的根提交上。
 
-1. 执行变基，将 master 分支里程碑 A 之后的提交全部迁移到新的根提交之上
+1. 执行变基，将 master 分支里程碑 A 之后的提交全部迁移到新的根提交之上
 
 ```
-$ git rebase --onto <根提交ID> A master
+$ git rebase --onto <根提交ID> A master
 ```
-
-

@@ -40,7 +40,7 @@ f806688054954efe414e20736d1f255dfdad6f1a Update libengine.so.
 
 git log <rev1>...<rev2>
 
-当不使用任何表示范围的参数是，相当于使用了默认的参数 HEAD，即显示当前HEAD 能够访问到的所有历史提交。可以是 tag 或 md5 哈希值，例如使用 tag 值。
+当不使用任何表示范围的参数是，相当于使用了默认的参数 HEAD，即显示当前HEAD 能够访问到的所有历史提交。可以是 tag 或 md5 哈希值，例如使用 tag 值。
 
 ```
 $ git log --oneline F^! D
@@ -96,7 +96,7 @@ beb30ca (tag: F) Commit F: merge I with J
 
 ### 定制输出
 
-git 的日志输出命令提供很多输出模板选择，可以根据需要选择荣冗余显示或精简显示。参数 --pretty=row 显示commit的原始数据，可以显示提交对应的树 ID.
+git 的日志输出命令提供很多输出模板选择，可以根据需要选择荣冗余显示或精简显示。参数 --pretty=row 显示commit的原始数据，可以显示提交对应的树 ID.
 
 ```
 $ git log --pretty=row -1
@@ -108,11 +108,11 @@ $ git log --pretty=row -1
 $ git log --pretty=fuller -1
 ```
 
-参数 --pretty=oneline 显示会提供最精简的日志输出。也可以使用 --oneline 参数，效果近似。
+参数 --pretty=oneline 显示会提供最精简的日志输出。也可以使用 --oneline 参数，效果近似。
 
-### 某次提交
+### 某次提交
 
-如果只想查看和分析某次提交，也可以使用 git show 或git cat-file 命令。使用 git show 显示里程碑 D 及其他提交：
+如果只想查看和分析某次提交，也可以使用 git show 或git cat-file 命令。使用 git show 显示里程碑 D 及其他提交：
 ```
 $ git show D --stat
 
